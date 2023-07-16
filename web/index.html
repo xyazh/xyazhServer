@@ -1,0 +1,287 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+    <title>XYA-PAGE</title>
+    <link rel="shortcut icon" href="./images/favicon.png">
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <link rel="stylesheet" href="./css/top.css">
+    <link rel="stylesheet" href="./css/body.css">
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/msg_card.css">
+    <script src="./js/jquery-2.1.4.min.js"></script>
+    <script src="./js/jquery.easytabs.min.js"></script>
+    <script src="./js/jquery.magnific-popup.min.js"></script>
+    <script src="./js/jquery.cookie.min.js"></script>
+    <script src="./js/temp.js"></script>
+    <script src="./layui/layui.js"></script>
+    <script type="text/html" id="msg_card_temp">
+        <div class="layui-card msg_card layui-anim-up">
+            <div class="layui-card-header" style="display: flex;">
+                <h3>{{title}}</h3>
+                <i style="margin-left: auto;margin-right: 2px;" id="d_ad_{{msg_id}}">•••</i>
+            </div>
+            <div class="layui-card-body">
+                <i>{{user_name}}&nbsp;&nbsp;</i><a style="color: #aaaaaa;">&gt; &gt;{{msg_id}}</a>
+                <br>
+               {{msg}}
+            </div>
+            <script>
+                layui.use('dropdown', function(){
+                    var dropdown = layui.dropdown;
+                    dropdown.render({
+                        elem: '#d_ad_{{msg_id}}',
+                        data:[
+                            {title: '收藏', id: 1},
+                            {title: '删除', id: 2},
+                            {title: '举报', id: 3},
+                            {title: '移动', id: 4}
+                        ]
+                    });
+                });
+            </script>
+        </div>
+    </script>
+    <script type="text/html" id="logging_layer_temp">
+        <ul class="layui-form layui-form-pane" style="margin: 15px;">
+            <li class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" lay-verify="required" type="mail" name="user_mail">
+                </div>
+            </li>
+            <li class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" lay-verify="required" type="password" name="password">
+                </div>
+            </li>
+            <li class="layui-form-item" style="text-align:center;">
+                <button type="submit" lay-submit lay-filter="logging_b" class="layui-btn">提交</button>
+            </li>
+        </ul>
+    </script>
+    <script type="text/html" id="register_layer_temp">
+        <ul class="layui-form layui-form-pane" style="margin: 15px;">
+            <li class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" lay-verify="required" name="user_name">
+                </div>
+            </li>
+            <li class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" lay-verify="required" type="password" name="password">
+                </div>
+            </li>
+            <li class="layui-form-item">
+                <label class="layui-form-label">确认密码</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" lay-verify="required" type="password" name="check_password">
+                </div>
+            </li>
+            <li class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-block" style="display: flex;flex-direction: column;">
+                    <input class="layui-input" lay-verify="required" id="r_mail" type="mail" name="user_mail">
+                    <button class="layui-btn" id="check_mail_button" onclick="get_mail_check_code();">发送验证码</button>
+                </div>
+            </li>
+            <li class="layui-form-item">
+                <label class="layui-form-label">验证码</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" lay-verify="required" name="check_number">
+                </div>
+            </li>
+            <li class="layui-form-item" style="text-align:center;">
+                <button type="submit" lay-submit lay-filter="register_b" class="layui-btn">提交</button>
+            </li>
+        </ul>
+    </script>
+</head>
+<body style="margin: 0;background-color: #eeeeee;">
+    <div id="top_bar" class="top_bar">
+        <ul class="layui-nav" lay-filter="">
+            <li><img id="logo_img" class="logo_img" src="./images/favicon.png"></li>
+            <li style="padding-right: 50px;"><h2 style="color: #444444;">XYA-PAGE</h2></li>
+            <li class="layui-nav-item" id="logging1"><button class="layui-btn top_button" onclick="logging_layer();" active="logging">登录</button></li>
+            <li class="layui-nav-item" id="register1"><button class="layui-btn top_button" onclick="register_layer();" active="logging">注册</button></li>
+            <li class="layui-nav-item"><button class="layui-btn top_button" onclick="layer.msg('草');">草</button></li>
+            <li class="layui-nav-item coll">
+                <button class="layui-btn coll" style="background-color: #dadada;"> ☰ </button>
+                <dl class="layui-nav-child">
+                    <dd id="logging2"><button class="layui-btn" onclick="logging_layer();">登录</button></dd>
+                    <dd id="register2"><button class="layui-btn" onclick="register_layer();">注册</button></dd>
+                    <dd><button class="layui-btn" onclick="layer.msg('草');">草</button></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+    <div id="top_block" class="top_block">
+    </div>
+    <div id="main_body" class="main_body">
+        <div id="left_main_body" class="left_main_body">
+            <div id="user_data" class="user_data">
+                <div id="user_name" class="user_name">游客</div>
+                <div id="user_id" class="user_id">UID:<p id="uid">1145141919810</p></div>
+            </div>
+            <div id="user_data" class="user_data datetime1">
+                <div id="datetime1"></div>
+            </div>
+        </div>
+        <div id="right_main_body" class="right_main_body">
+            <div class="layui-tab right_main_page">
+                <ul class="layui-tab-title">
+                  <li class="layui-this">留言栏</li>
+                  <li>用户管理</li>
+                  <li>权限分配</li>
+                  <li>商品管理</li>
+                  <li>订单管理</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show" id="msg_table">
+                        <ul class="layui-form layui-form-pane" style="margin: 15px;">
+                            <li class="layui-form-item">
+                                <label class="layui-form-label">标题</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input" lay-verify="required" placeholder="最多60字" id="in_title" name="in_title">
+                                </div>
+                            </li>
+                            <li class="layui-form-item">
+                                <label class="layui-form-label">正文</label>
+                                <div class="layui-input-block">
+                                    <textarea class="layui-input" lay-verify="required" placeholder="最多2000字" id="in_text" name="in_text"></textarea>
+                                </div>
+                                <button type="submit" lay-submit lay-filter="send_msg" class="layui-btn">提交</button>
+                            </li>
+                        </ul>
+                        <hr id="msg_list">
+                    </div>
+                    <div class="layui-tab-item">内容2</div>
+                    <div class="layui-tab-item">内容3</div>
+                    <div class="layui-tab-item">内容4</div>
+                    <div class="layui-tab-item">内容5</div>
+                </div>
+              </div>
+        </div>
+    </div>
+    <script>
+        c_token = $.cookie("token");
+        if(c_token){
+            $("#logging1").attr("style","display: none;");
+            $("#logging2").attr("style","display: none;");
+            $("#register1").attr("style","display: none;");
+            $("#register2").attr("style","display: none;");
+        }else{
+        }
+        c_uid = $.cookie("uid");
+        if(c_uid){
+            $("#uid").text(c_uid);
+        }
+        c_user_name = $.cookie("user_name");
+        if(c_user_name){
+            $("#user_name").text(c_user_name);
+        }
+        c_level = $.cookie("level");
+    </script>
+    <script>
+        layui.use('element', function(){
+            var element = layui.element;
+        });
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+          //执行一个laydate实例
+            laydate.render({
+                elem: '#datetime1', //指定元素
+                show: true,
+                position: 'static',
+                btns: ['now'],
+            });
+        });
+    </script>
+    <script src="./js/logging_register.js"></script>
+    <script>
+        $.ajax({
+            url: "/api/msg_get",
+            type: "get",
+            async: false,
+            success: function(result){
+                var l_data = JSON.parse(result);
+                for(var i=0;i<l_data.length;i++){
+                    //var h = template("msg_card_temp",{"msg_id":i,"title":"标题","user_name":"野兽前辈","msg":"你是一个一个一个"})
+                    var h = template("msg_card_temp",l_data[i])
+                    $("#msg_list").after(h);
+                }
+            },
+            error: function(xhr,status,error){
+            }
+        });
+    </script>
+    <script>
+        layui.form.render().on('submit(send_msg)', function(data){
+            if(data.field["in_title"].length > 60){
+                layer.msg("标题字数太长", {icon: 0});
+                return;
+            }
+            if(data.field["in_text"].length > 2000){
+                layer.msg("正文字数太长", {icon: 0});
+                return;
+            }
+            var r_data = data.field;
+            if(c_token){
+                r_data = {"title":r_data["in_title"],"text":r_data["in_text"],"token":c_token}
+            }
+            else if(c_user_name){
+                r_data = {"title":r_data["in_title"],"text":r_data["in_text"],"name":c_user_name}
+            }else{
+                c_user_name = prompt("请输入临时用户名","");
+                if(c_user_name){
+                    $("#user_name").text(c_user_name);
+                }
+                return;
+            }
+            r_data = JSON.stringify(r_data);
+            $.ajax({
+                url: "/api/msg_send",
+                type: "post",
+                data: r_data,
+                async: false,
+                success: function(result){
+                    var l_data = JSON.parse(result);
+                    var h = template("msg_card_temp",l_data)
+                    $("#msg_list").after(h);
+                    $("#in_title").val("");
+                    $("#in_text").val("");
+                    layer.msg("提交成功", {icon: 1});
+                },
+                error: function(xhr,status,error){
+                    var m = "错误"
+                    switch(xhr.status){
+                        case 400:
+                            m = "数据字段错误";
+                            break;
+                        case 404:
+                            m = "用户不存在";
+                            break;
+                        case 403:
+                            if(error == "resetting time"){
+                                m = "发言的间隔是5s";
+                            }else{
+                                m = "0-9时不允许游客发言";
+                            }
+                    }
+                    layer.msg(m, {icon: 0});
+                }
+            });
+        });
+    </script>
+    <script>
+        layer.open({
+            title: '公告',
+            content: "手机段右上角可以登录。<br>游客在0-9点无法发言",
+        });
+    </script>
+</body>
+</html>
